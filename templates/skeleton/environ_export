@@ -1,0 +1,52 @@
+export LI={{ pillar['LI'] }}
+export LI_LIB=${LI}/lib
+export LI_SCRIPTS=${LI}/scripts
+export LI_TOOLS=${LI_SCRIPTS}/tools
+export LI_CP_ORIGINAL=/srv/SAAB/configuration.original
+export LI_RESET_CONFIGURATION=/srv/SAAB/reset.configuration
+export LI_STARTED_SERVICES=/srv/SAAB/services.list
+export LI_BIN=${LI}/bin
+export LI_SBIN=${LI}/sbin
+export LI_RAL=${LI}/ral
+export LI_ETC=/HITT/etc
+export LI_LOG=/var/log/os_configurator
+export LI_RES=${LI}/resources
+export LI_TMP=/tmp/.hitt/linuxinstall
+export LI_CONFPID=${LI_TMP}/os_configurator.pid
+export LI_CSC=${LI}/cscdata
+export LI_SYSCONF=/${LI}/etc/sysconfig
+export LI_ERROR_CODEFILE=${LI}/errorreturncodes
+export LI_ERROR_RETURN_FILE=${LI}/status.file
+export LI_SAAB_ETC_DIR=/etc/SAAB
+export LI_WIDTH=80
+
+export NO_ERROR=0
+export ERR_GENERIC=1
+export ERR_KNOWN=2
+export ERR_UNKNOWN=255
+
+test -r ${LI_CSC}/csc_file && export LI_CSCFILE=${LI_CSC}/$( cat ${LI_CSC}/csc_file ).csc
+test `echo $PATH | grep -c /usr/local/bin` -eq 0 && export PATH=$PATH:/usr/local/bin
+test `echo $PATH | grep -c /usr/local/sbin` -eq 0 && export PATH=$PATH:/usr/local/sbin
+
+# Settings required for displaying success and failure status lines.
+export RES_COL=80
+export MOVE_TO_COL="echo -en \\033[${RES_COL}G"
+export SETCOLOR_SUCCESS="echo -en \\033[1;32m"
+export SETCOLOR_FAILURE="echo -en \\033[1;31m"
+export SETCOLOR_WARNING="echo -en \\033[1;33m"
+export SETCOLOR_NORMAL="echo -en \\033[0;39m"
+
+export productdir={{ pillar['PROJECT_BUILD'] }} 
+export cfhitt={{ pillar['PROJECT_BUILD'] }}/cfhitt 
+export LI_CSC_FILENAME={{ pillar['CSC_FILE'] }}
+export LI_NODE_INFO=\${cfhitt}/node_info 
+export LI_NETWORKDATA=\${cfhitt}/networkdata 
+export LI_NETWORKDEVDATA=\${cfhitt}/networkdevicesdata 
+export LI_NETWORKDATADEV=\${LI_NETWORKDEVDATA} 
+export LI_CUSTOM=\${cfhitt}/installdata 
+export LI_SECURITY=\${cfhitt}/securitydata 
+export LI_TIMESTAMP=$(date +%Y-%m-%d_%H:%M:%S) 
+export LI_VERBOSE=${LI_VERBOSE} 
+export LI_DEBUG=${LI_DEBUG}
+export LI_FORCE_CLEAN_SEC_STORAGE=${LI_FORCE_CLEAN_SEC_STORAGE}

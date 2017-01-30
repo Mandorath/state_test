@@ -1,0 +1,31 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+if [ "$UID" != "0" ]
+then
+    test `echo $PATH | grep -c /usr/local/bin` -eq 0 && 
+PATH=$PATH:/usr/local/bin
+    test `echo $PATH | grep -c /HITT/bin` -eq 0 && PATH=$PATH:/HITT/bin
+    test `echo $PATH | grep -c {{ pillar['LI'] }}/bin` -eq 0 && PATH=$PATH:{{ pillar['LI'] }}/bin 
+else
+    test `echo $PATH | grep -c /usr/local/bin` -eq 0 && 
+PATH=$PATH:/usr/local/bin
+    test `echo $PATH | grep -c /HITT/bin` -eq 0 && PATH=$PATH:/HITT/bin
+    test `echo $PATH | grep -c /usr/local/sbin` -eq 0 && 
+PATH=$PATH:/usr/local/sbin
+    test `echo $PATH | grep -c /HITT/sbin` -eq 0 && 
+PATH=$PATH:/HITT/sbin
+    test `echo $PATH | grep -c {{ pillar['project_build'] }}/bin` -eq 0 && PATH=$PATH:{{ pillar['LI'] }}/bin
+    test `echo $PATH | grep -c {{ pillar['project_build'] }}/sbin` -eq 0 && 
+PATH=$PATH:{{ pillar['project_build'] }}/sbin`
+fi
+
+#if [ -f /HITT/etc/sysconfig ] then
+#    . /HITT/etc/sysconfig
+#    export MIBDIRS=
+#fi
+

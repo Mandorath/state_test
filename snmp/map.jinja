@@ -1,0 +1,55 @@
+{# Debian uses snmpd init script for both snmpd/snmptrapd! #}
+
+{% load_yaml as snmp %}
+service: snmpd
+servicetrap: snmptrapd
+config: /etc/snmp/snmpd.conf
+configtrap: /etc/snmp/snmptrapd.conf
+configagent: /etc/snmp/snmp.conf
+mibsdir: /usr/share/snmp/mibs
+source: salt://{{ slspath }}/files/snmpd.conf
+sourcetrap: salt://{{ slspath }}/files/snmptrapd.conf
+sourceagent: salt://{{ slspath }}/files/snmp.conf
+trapdargs: -Lsd -p /var/run/snmptrapd.pid
+{% endload %}
+
+{% load_yaml as platform_specific %}
+RedHat:
+    pkg: net-snmp
+    pkgutils: net-snmp-utils
+    options: /etc/sysconfig/snmpd
+    optionstrap: /etc/sysconfig/snmptrapd
+    sourceoptions: salt://{{ slspath }}/files/snmpd.options
+    sourceoptionstrap: salt://{{ slspath }}/files/snmptrapd.options
+    snmpdargs: -Lsd -Lf /dev/null -p /var/run/snmpd.pid -a
+Debian:
+    pkg: snmpd
+    pkgutils: snmp
+    configdefault: /etc/default/snmpd
+    sourcedefault: salt://{{ slspath }}/files/snmpd.default
+    snmpdargs: -Lsd -Lf /dev/null -u snmp -g snmp -I -smux,mteTrigger,mteTriggerConf -p /var/run/snmpd.pid
+    mibs:
+    snmpdrun: "yes"
+    trapdrun: "no"
+{% endload %}
+
+{% load_yaml as rhel_specific %}
+Red Hat Enterprise Linux Server-6:
+    sourceoptions: salt://{{ slspath }}/files/snmpd.options.redhat6
+Red Hat Enterprise Linux Server-5:
+    sourceoptions: salt://{{ slspath }}/files/snmpd.options.redhat5
+{% endload %}
+
+{% set platform_addition = salt['grains.filter_by'](platform_specific, default='RedHat') %}
+{% set rhel_addition = salt['grains.filter_by'](rhel_specific, grain='osfinger') %}
+{% set user_override = salt['pillar.get']('snmp:lookup', {}) %}
+
+{% do snmp.update(platform_addition) %}
+
+{% if rhel_addition %}
+    {% do snmp.update(rhel_addition) %}
+{% endif %}
+
+{% if user_override %}
+    {% do snmp.update(user_override) %}
+{% endif %}

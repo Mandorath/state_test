@@ -1,0 +1,19 @@
+openssh:
+  sshd_config: /etc/ssh/sshd_config
+  sshd_config_src: salt://{{ slspath }}/files/sshd_config
+  ssh_config: /etc/ssh/ssh_config
+  ssh_config_src: salt://{{ slspath }}/files/ssh_config
+  banner: /etc/ssh/banner
+  banner_src: salt://{{ slspath }}/files/banner
+  ssh_known_hosts: /etc/ssh/ssh_known_hosts
+  dig_pkg: dnsutils
+  ssh_moduli: /etc/ssh/moduli
+  root_group: root
+sshd_config: {}
+ssh_config:
+  Hosts:
+    '*':
+      SendEnv: LANG LC_*
+      HashKnownHosts: yes
+      GSSAPIAuthentication: yes
+      GSSAPIDelegateCredentials: no
